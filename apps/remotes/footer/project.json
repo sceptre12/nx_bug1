@@ -1,0 +1,93 @@
+{
+  "name": "footer",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/remotes/footer/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "apps/remotes/footer/dist",
+        "index": "apps/remotes/footer/src/index.html",
+        "baseHref": "/",
+        "main": "apps/remotes/footer/src/main.ts",
+        "tsConfig": "apps/remotes/footer/tsconfig.app.json",
+        "assets": [
+          "apps/remotes/footer/src/favicon.ico",
+          "apps/remotes/footer/src/assets"
+        ],
+        "rspackConfig": "apps/remotes/footer/rspack.config.ts",
+        "styles": ["apps/remotes/footer/src/styles.tailwind"],
+        "scripts": [],
+        "configurations": {
+          "development": {
+            "mode": "development"
+          },
+          "production": {
+            "mode": "production",
+            "optimization": true,
+            "sourceMap": false,
+            "outputHashing": "all",
+            "namedChunks": false,
+            "extractLicenses": true,
+            "vendorChunk": false
+          }
+        },
+        "target": "web"
+      },
+      "configurations": {
+        "production": {
+          "rspackConfig": "apps/remotes/footer/rspack.config.prod.ts"
+        }
+      },
+      "dependsOn": ["^build", "typecheck"]
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "footer:build",
+        "hmr": true,
+        "port": 4202
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "footer:build:development"
+        },
+        "production": {
+          "buildTarget": "footer:build:production",
+          "hmr": false
+        }
+      },
+      "dependsOn": ["typecheck"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "footer:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "footer:serve:development"
+        },
+        "production": {
+          "serveTarget": "footer:serve:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{projectRoot}/test-output/jest/coverage"],
+      "options": {
+        "jestConfig": "apps/remotes/footer/jest.config.ts"
+      }
+    }
+  }
+}

@@ -15,6 +15,11 @@
     "noUnusedLocals": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2022"
+    "target": "es2022",
+    "baseUrl": ".",
+    "paths": {
+      "footer/Module": ["apps/remotes/footer/src/remote-entry.ts"],
+      "header/Module": ["apps/remotes/header/src/remote-entry.ts"]
+    }
   }
 }

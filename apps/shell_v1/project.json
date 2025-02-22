@@ -1,0 +1,90 @@
+{
+  "name": "shell_v1",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/shell_v1/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "apps/shell_v1/dist",
+        "index": "apps/shell_v1/src/index.html",
+        "baseHref": "/",
+        "main": "apps/shell_v1/src/main.ts",
+        "tsConfig": "apps/shell_v1/tsconfig.app.json",
+        "assets": ["apps/shell_v1/src/favicon.ico", "apps/shell_v1/src/assets"],
+        "rspackConfig": "apps/shell_v1/rspack.config.ts",
+        "styles": ["apps/shell_v1/src/styles.tailwind"],
+        "scripts": [],
+        "configurations": {
+          "development": {
+            "mode": "development"
+          },
+          "production": {
+            "mode": "production",
+            "optimization": true,
+            "sourceMap": false,
+            "outputHashing": "all",
+            "namedChunks": false,
+            "extractLicenses": true,
+            "vendorChunk": false
+          }
+        },
+        "target": "web"
+      },
+      "configurations": {
+        "production": {
+          "rspackConfig": "apps/shell_v1/rspack.config.prod.ts"
+        }
+      },
+      "dependsOn": ["^build", "typecheck"]
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "shell_v1:build",
+        "hmr": true,
+        "port": 4200
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "shell_v1:build:development"
+        },
+        "production": {
+          "buildTarget": "shell_v1:build:production",
+          "hmr": false
+        }
+      },
+      "dependsOn": ["typecheck"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "shell_v1:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "shell_v1:serve:development"
+        },
+        "production": {
+          "serveTarget": "shell_v1:serve:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{projectRoot}/test-output/jest/coverage"],
+      "options": {
+        "jestConfig": "apps/shell_v1/jest.config.ts"
+      }
+    }
+  }
+}
